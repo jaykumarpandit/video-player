@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, PanInfo, useAnimation } from "framer-motion";
+import { motion, PanInfo, useAnimation, type Variants } from "framer-motion";
 import { ChevronDown, X, Play, Pause } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { usePlayer } from "@/context/player-context";
 import { VideoPlayer } from "./video-player";
 import { RelatedVideos } from "./related-videos";
@@ -11,6 +12,8 @@ import { cn } from "@/lib/utils";
 
 export function PlayerOverlay() {
   const { currentVideo, isMinimized, minimizePlayer, restorePlayer, closePlayer, isPlaying, togglePlay } = usePlayer();
+  const router = useRouter();
+  const pathname = usePathname();
   const controls = useAnimation();
   const [isDragging, setIsDragging] = useState(false);
 
@@ -25,6 +28,13 @@ export function PlayerOverlay() {
 
   if (!currentVideo) return null;
 
+  const handleClose = () => {
+    closePlayer();
+    if (pathname?.startsWith("/video/")) {
+      router.push("/");
+    }
+  };
+
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setIsDragging(false);
     if (info.offset.y > 100) {
@@ -34,7 +44,7 @@ export function PlayerOverlay() {
     }
   };
 
-  const variants = {
+  const variants: Variants = {
     full: {
       top: 0,
       left: 0,
@@ -45,7 +55,7 @@ export function PlayerOverlay() {
       borderRadius: 0,
       x: 0,
       y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
+      transition: { type: "spring", stiffness: 300, damping: 30 } as const,
     },
     minimized: {
       top: "auto",
@@ -57,8 +67,8 @@ export function PlayerOverlay() {
       borderRadius: 12,
       x: 0,
       y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
-    }
+      transition: { type: "spring", stiffness: 300, damping: 30 } as const,
+    },
   };
 
   return (
@@ -98,7 +108,7 @@ export function PlayerOverlay() {
             <Button variant="ghost" size="icon" className="text-white" onClick={(e) => { e.stopPropagation(); togglePlay(); }}>
               {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
             </Button>
-            <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white" onClick={(e) => { e.stopPropagation(); closePlayer(); }}>
+            <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-white" onClick={(e) => { e.stopPropagation(); handleClose(); }}>
               <X className="h-4 w-4" />
             </Button>
           </div>

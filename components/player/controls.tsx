@@ -27,7 +27,7 @@ export function Controls({
   onSkipBack,
 }: ControlsProps) {
   return (
-    <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-b from-black/40 via-transparent to-black/60 p-4 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100">
+    <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-b from-black/40 via-transparent to-black/60 p-4 opacity-100 md:opacity-0 md:hover:opacity-100 md:group-hover:opacity-100 transition-opacity">
       <div className="flex justify-end">
         {/* Top controls if needed */}
       </div>

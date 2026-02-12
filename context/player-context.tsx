@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { Content } from "@/types/dataset";
 
 interface PlayerContextType {
@@ -9,7 +9,9 @@ interface PlayerContextType {
   isMinimized: boolean;
   relatedVideos: Content[];
   playVideo: (video: Content, related?: Content[]) => void;
+  loadVideo: (video: Content, related?: Content[]) => void;
   togglePlay: () => void;
+  setPlaying: (playing: boolean) => void;
   minimizePlayer: () => void;
   restorePlayer: () => void;
   closePlayer: () => void;
@@ -24,46 +26,72 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [relatedVideos, setRelatedVideos] = useState<Content[]>([]);
 
-  const playVideo = (video: Content, related: Content[] = []) => {
+  const loadVideo = useCallback((video: Content, related: Content[] = []) => {
     setCurrentVideo(video);
     setRelatedVideos(related);
+    setIsMinimized(false);
+  }, []);
+
+  const playVideo = useCallback((video: Content, related: Content[] = []) => {
+    loadVideo(video, related);
     setIsPlaying(true);
-    setIsMinimized(false);
-  };
+  }, [loadVideo]);
 
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
     setIsPlaying((prev) => !prev);
-  };
+  }, []);
 
-  const minimizePlayer = () => {
+  const setPlaying = useCallback((playing: boolean) => {
+    setIsPlaying(playing);
+  }, []);
+
+  const minimizePlayer = useCallback(() => {
     setIsMinimized(true);
-  };
+  }, []);
 
-  const restorePlayer = () => {
+  const restorePlayer = useCallback(() => {
     setIsMinimized(false);
-  };
+  }, []);
 
-  const closePlayer = () => {
+  const closePlayer = useCallback(() => {
     setCurrentVideo(null);
     setIsPlaying(false);
     setIsMinimized(false);
-  };
+  }, []);
+
+  const contextValue = React.useMemo(
+    () => ({
+      currentVideo,
+      isPlaying,
+      isMinimized,
+      relatedVideos,
+      playVideo,
+      loadVideo,
+      togglePlay,
+      setPlaying,
+      minimizePlayer,
+      restorePlayer,
+      closePlayer,
+      setRelatedVideos,
+    }),
+    [
+      currentVideo,
+      isPlaying,
+      isMinimized,
+      relatedVideos,
+      playVideo,
+      loadVideo,
+      togglePlay,
+      setPlaying,
+      minimizePlayer,
+      restorePlayer,
+      closePlayer,
+      setRelatedVideos,
+    ]
+  );
 
   return (
-    <PlayerContext.Provider
-      value={{
-        currentVideo,
-        isPlaying,
-        isMinimized,
-        relatedVideos,
-        playVideo,
-        togglePlay,
-        minimizePlayer,
-        restorePlayer,
-        closePlayer,
-        setRelatedVideos,
-      }}
-    >
+    <PlayerContext.Provider value={contextValue}>
       {children}
     </PlayerContext.Provider>
   );

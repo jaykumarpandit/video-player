@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Play } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Content } from "@/types/dataset";
 import { usePlayer } from "@/context/player-context";
 import { cn } from "@/lib/utils";
@@ -22,11 +23,15 @@ export function VideoCard({
   aspectRatio = "video"
 }: VideoCardProps) {
   const { playVideo } = usePlayer();
+  const router = useRouter();
 
   return (
     <div 
       className={cn("group cursor-pointer flex flex-col gap-2", className)}
-      onClick={() => playVideo(video, relatedVideos)}
+      onClick={() => {
+        playVideo(video, relatedVideos);
+        router.push(`/video/${encodeURIComponent(video.slug)}`);
+      }}
     >
       <div className={cn(
         "relative overflow-hidden rounded-xl bg-muted",
