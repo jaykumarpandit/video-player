@@ -129,7 +129,7 @@ export function PlayerOverlay() {
 
       {/* Video Container */}
       <div className={cn("relative w-full bg-black", isMinimized ? "h-full" : "aspect-video shrink-0")}>
-        <VideoPlayer />
+        <VideoPlayer/>
         
         {/* Mini Player Controls Overlay */}
         {isMinimized && (

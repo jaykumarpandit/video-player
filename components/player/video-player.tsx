@@ -27,7 +27,7 @@ interface VideoPlayerProps {
 const ReactPlayerAny = ReactPlayer as any;
 
 export function VideoPlayer({ className }: VideoPlayerProps) {
-  const { currentVideo, isPlaying, setPlaying } = usePlayer();
+  const { currentVideo, isPlaying, setPlaying, relatedVideos, playVideo } = usePlayer();
   const playerRef = useRef<any>(null);
   const [hasWindow, setHasWindow] = useState(false);
 
@@ -40,16 +40,37 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
   // Normalize URL for different media types
   let url = currentVideo.mediaUrl;
   if (currentVideo.mediaType === "YOUTUBE") {
-   if (url && url.includes("/embed/")) {
-        const id = url.split("/embed/")[1]?.split("?")[0];
-        if (id) {
-            url = `https://www.youtube.com/watch?v=${id}`;
-        }
+    if (url && url.includes("/embed/")) {
+      const id = url.split("/embed/")[1]?.split("?")[0];
+      if (id) {
+        url = `https://www.youtube.com/watch?v=${id}`;
+      }
     } else if (!url || (!url.includes("youtube.com") && !url.includes("youtu.be"))) {
       const id = currentVideo.slug.split("?")[0];
       url = `https://www.youtube.com/watch?v=${id}`;
     }
   }
+
+  const handleEnded = () => {
+    if (!currentVideo) return;
+
+    const list = relatedVideos || [];
+    if (!list.length) {
+      setPlaying(false);
+      return;
+    }
+
+    const index = list.findIndex((v) => v.slug === currentVideo.slug);
+    const next = index >= 0 ? list[index + 1] : null;
+
+    if (next) {
+      // Play next video in the same category list
+      playVideo(next, list);
+    } else {
+      // Last video in category – just stop
+      setPlaying(false);
+    }
+  };
 
 
   return (
@@ -70,6 +91,7 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
           controls={false}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
+          onEnded={handleEnded}
           style={{
             width: "100%",
             height: "100%",
