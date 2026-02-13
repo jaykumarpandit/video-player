@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import ReactPlayer from "react-player";
+import { useRouter } from "next/navigation";
 import { usePlayer } from "@/context/player-context";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
   const { currentVideo, isPlaying, setPlaying, relatedVideos, playVideo } = usePlayer();
   const playerRef = useRef<any>(null);
   const [hasWindow, setHasWindow] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setHasWindow(true);
@@ -66,6 +68,8 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
     if (next) {
       // Play next video in the same category list
       playVideo(next, list);
+      // Smoothly update the route/slug so URL matches the playing video
+      router.push(`/video/${encodeURIComponent(next.slug)}`);
     } else {
       // Last video in category – just stop
       setPlaying(false);
