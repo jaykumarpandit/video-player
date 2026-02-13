@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, PanInfo, useAnimation, type Variants } from "framer-motion";
-import { ChevronDown, X, Play, Pause } from "lucide-react";
+import { ChevronDown, X, Play, Pause, ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { usePlayer } from "@/context/player-context";
 import { VideoPlayer } from "./video-player";
@@ -25,6 +25,12 @@ export function PlayerOverlay() {
       controls.start("full");
     }
   }, [isMinimized, controls]);
+
+  useEffect(() => {
+    if (!pathname?.startsWith("/video/") && currentVideo) {
+      closePlayer();
+    }
+  }, [pathname, currentVideo, closePlayer]);
 
   if (!currentVideo) return null;
 
@@ -90,9 +96,32 @@ export function PlayerOverlay() {
       {/* Header / Drag Handle (only visible in full mode) */}
       {!isMinimized && (
         <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent p-4 text-white">
-          <Button variant="ghost" size="icon" className="text-white" onClick={minimizePlayer}>
-            <ChevronDown className="h-6 w-6" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white"
+              onClick={() => {
+                if (pathname?.startsWith("/video/")) {
+                  router.back();
+                } else {
+                  closePlayer();
+                }
+              }}
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white"
+              onClick={minimizePlayer}
+            >
+              <ChevronDown className="h-6 w-6" />
+            </Button>
+          </div>
+
           <span className="text-sm font-medium">Now Playing</span>
           <div className="w-10" /> {/* Spacer */}
         </div>
@@ -100,7 +129,7 @@ export function PlayerOverlay() {
 
       {/* Video Container */}
       <div className={cn("relative w-full bg-black", isMinimized ? "h-full" : "aspect-video shrink-0")}>
-        <VideoPlayer showControls={!isMinimized} />
+        <VideoPlayer />
         
         {/* Mini Player Controls Overlay */}
         {isMinimized && (
