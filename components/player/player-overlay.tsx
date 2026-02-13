@@ -110,7 +110,7 @@ export function PlayerOverlay() {
         
         {/* Mini Player Controls Overlay */}
         {isMinimized && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <Button variant="ghost" size="icon" className="text-white" onClick={(e) => { e.stopPropagation(); togglePlay(); }}>
               {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
             </Button>

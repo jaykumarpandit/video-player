@@ -5,7 +5,7 @@ import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Content } from "@/types/dataset";
 import { usePlayer } from "@/context/player-context";
-import { cn } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 
 interface VideoCardProps {
   video: Content;
@@ -24,6 +24,11 @@ export function VideoCard({
 }: VideoCardProps) {
   const { playVideo } = usePlayer();
   const router = useRouter();
+
+  const durationLabel =
+    typeof video.durationSeconds === "number"
+      ? formatTime(video.durationSeconds)
+      : "--:--";
 
   return (
     <div 
@@ -49,9 +54,8 @@ export function VideoCard({
             <Play className="h-6 w-6 fill-white text-white" />
           </div>
         </div>
-        {/* Duration placeholder since not in dataset */}
         <div className="absolute bottom-2 right-2 rounded bg-black/80 px-1.5 py-0.5 text-xs font-medium text-white">
-          4:20
+          {durationLabel}
         </div>
       </div>
       <div className="flex flex-col gap-1">

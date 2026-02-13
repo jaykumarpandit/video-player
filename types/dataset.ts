@@ -4,6 +4,7 @@ export interface Content {
   mediaType: "YOUTUBE" | string;
   thumbnailUrl: string;
   slug: string;
+  durationSeconds?: number;
 }
 
 export interface Category {
