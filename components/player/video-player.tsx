@@ -74,11 +74,20 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
 
 
   return (
-    <div className={cn("relative aspect-video w-full bg-black group", className)}>
+    <div
+      className={cn(
+        "relative w-full bg-black",
+        // Ensure video + controls never exceed viewport height
+        "h-full max-h-screen",
+        className
+      )}
+    >
       <MediaController
+        className="relative h-full w-full overflow-hidden"
         style={{
           width: "100%",
-          aspectRatio: "16/9",
+          height: "100%",
+          position: "relative",
         }}
       >
         <ReactPlayerAny
@@ -99,11 +108,11 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
           }}
           config={{
             youtube: {
-              playerVars: { showinfo: 0, controls: 0, modestbranding: 1 }
-            }
+              playerVars: { showinfo: 0, controls: 0, modestbranding: 1 },
+            },
           }}
         />
-        <MediaControlBar>
+        <MediaControlBar className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-2 pb-2 pt-4 text-white">
           <MediaPlayButton />
           <MediaSeekBackwardButton seekOffset={10} />
           <MediaSeekForwardButton seekOffset={10} />

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, PanInfo, useAnimation, type Variants } from "framer-motion";
-import { ChevronDown, X, Play, Pause, ArrowLeft } from "lucide-react";
+import { ChevronDown, X, Play, Pause } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { usePlayer } from "@/context/player-context";
 import { VideoPlayer } from "./video-player";
@@ -96,32 +96,9 @@ export function PlayerOverlay() {
       {/* Header / Drag Handle (only visible in full mode) */}
       {!isMinimized && (
         <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent p-4 text-white">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white"
-              onClick={() => {
-                if (pathname?.startsWith("/video/")) {
-                  router.back();
-                } else {
-                  closePlayer();
-                }
-              }}
-            >
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white"
-              onClick={minimizePlayer}
-            >
-              <ChevronDown className="h-6 w-6" />
-            </Button>
-          </div>
-
+          <Button variant="ghost" size="icon" className="text-white" onClick={minimizePlayer}>
+            <ChevronDown className="h-6 w-6" />
+          </Button>
           <span className="text-sm font-medium">Now Playing</span>
           <div className="w-10" /> {/* Spacer */}
         </div>
