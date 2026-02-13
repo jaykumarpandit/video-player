@@ -66,12 +66,9 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
     const next = index >= 0 ? list[index + 1] : null;
 
     if (next) {
-      // Play next video in the same category list
       playVideo(next, list);
-      // Smoothly update the route/slug so URL matches the playing video
       router.push(`/video/${encodeURIComponent(next.slug)}`);
     } else {
-      // Last video in category – just stop
       setPlaying(false);
     }
   };
@@ -81,7 +78,6 @@ export function VideoPlayer({ className }: VideoPlayerProps) {
     <div
       className={cn(
         "relative w-full bg-black",
-        // Ensure video + controls never exceed viewport height
         "h-full max-h-screen",
         className
       )}

@@ -15,7 +15,6 @@ export function VideoRouteClient({ slug }: { slug: string }) {
     for (const cat of categories) {
       const found = cat.contents.find((v) => v.slug === slug);
       if (found) {
-        // Load video without autoplay to avoid mobile NotAllowedError.
         loadVideo(found, cat.contents);
         return;
       }

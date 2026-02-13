@@ -93,22 +93,19 @@ export function PlayerOverlay() {
       )}
       onClick={isMinimized && !isDragging ? restorePlayer : undefined}
     >
-      {/* Header / Drag Handle (only visible in full mode) */}
       {!isMinimized && (
         <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent p-4 text-white">
           <Button variant="ghost" size="icon" className="text-white" onClick={minimizePlayer}>
             <ChevronDown className="h-6 w-6" />
           </Button>
           <span className="text-sm font-medium">Now Playing</span>
-          <div className="w-10" /> {/* Spacer */}
+          <div className="w-10" /> 
         </div>
       )}
 
-      {/* Video Container */}
       <div className={cn("relative w-full bg-black", isMinimized ? "h-full" : "aspect-video shrink-0")}>
         <VideoPlayer/>
         
-        {/* Mini Player Controls Overlay */}
         {isMinimized && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <Button variant="ghost" size="icon" className="text-white" onClick={(e) => { e.stopPropagation(); togglePlay(); }}>
@@ -120,8 +117,7 @@ export function PlayerOverlay() {
           </div>
         )}
       </div>
-
-      {/* Content Below Video (only in full mode) */}
+      
       {!isMinimized && (
         <div className="flex-1 overflow-y-auto bg-background">
           <div className="p-4">
